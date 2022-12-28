@@ -1,4 +1,4 @@
-void Create_Newacc();
+
 void Open_existaccount(,);
 void Make_Transaction(,);
 void Chg_Pass(,);

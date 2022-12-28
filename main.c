@@ -4,15 +4,15 @@
  tNode*Head=NULL;
 
 
-void CreateNewAcc(tNode **Head , uint8 Gen_Pass , uint8* Gen_ID)
+void CreateNewAcc(tNode **Head )
 {
-    char Gen_ID;
-    char Gen_Pass;
+    char *GenBank_ID;
+    char *Gen_Password;
 
     tNode *TempNode = NULL ;
     tNode *LastNode = NULL ;
 
-    TempNode = (tNode *)malloc(sizeof(tNode)); //created a node 
+    TempNode = (tNode *)malloc(sizeof(tNode)); //created a node
 
     if (NULL != TempNode)
     {
@@ -22,8 +22,8 @@ void CreateNewAcc(tNode **Head , uint8 Gen_Pass , uint8* Gen_ID)
          *  Generate Pass and ID 
          * 
         */
-        Gen_ID();
-        Gen_Pass();
+        GenBank_ID= Gen_ID();
+        Gen_Password= Gen_Pass();
         
         // *TempNode->State = "active";
         strcpy(TempNode->State, "active");
@@ -56,19 +56,19 @@ void CreateNewAcc(tNode **Head , uint8 Gen_Pass , uint8* Gen_ID)
         /* DataBase is Empty */
         if (NULL == *Head)
         {
-            Head = TempNode ;       / Head of DataBaase points to this user data as it is first user */
+            Head = TempNode ;       // Head of DataBaase points to this user data as it is first user */
         }
         /* DataBase is not Empty */
         else
         {
-            LastNode = Head ;       / save Head of DataBase into another variable to make itration on it */
+            LastNode = Head ;       // save Head of DataBase into another variable to make itration on it */
 
-            while (NULL != LastNode->NodeLink)
+            while (NULL != LastNode->pnext)
             {
                 /* check if NodeLink Points to Null --> to find the last item in DataBase */
-                LastNode = LastNode->NodeLink ;
+                LastNode = LastNode->pnext ;
             }
-            LastNode->NodeLink = TempNode ;
+            LastNode->pnext = TempNode ;
         }
     }
     else
@@ -93,14 +93,15 @@ void main(void)
             {
                 printf("****************Welcome to Admin mode**************");
                 int choice1;
-                printf("Create New account Press 1:");
+                printf("Create New account Press 1:\n");
                 printf("Open existing account Press 2:");
                 printf("Exit system Press 3:");
                 scanf("%d",&choice1); //then here the admin select the choice & do the functions
 
                 if ( choice1==1)
                 {
-                    Create_Newacc();
+                     CreateNewAcc( &Head);
+                
 
                 }
                 else if(choice1==2)
@@ -125,6 +126,11 @@ void main(void)
         }
 
         case 2: { //Client mode
+
+            printf("please enter password");
+            scanf
+            printf
+            scanf
             while(1)
             {
                 printf("********************Welcome to Client mode***********************");
@@ -144,20 +150,12 @@ void main(void)
                 }
                 else if (choice ==2) //change password
                 {
-                    Chg_Pass();
-                    printf("please enter old password:");
-                    scanf("%d",&op);
-                    print("please enter new password":);
-                    scanf("%d",&np);
-                    op=np;
-                    break;
+                   Chg_Pass();  
 
                 }
                 else if (choice ==3)
                 {
-                    printf("Enter amount of Cash:\n");
-                    scanf("%d",&cash);
-                    
+
                     Get_Cash();
                 }
                 else if(choice ==4)
@@ -190,32 +188,37 @@ void main(void)
     
 }
 
-void Create_Newacc()
+
+
+void Open_existaccount(tnode **head)
 {
 
 }
 
-void Open_existaccount(,)
+void Make_Transaction(tnode **head)
+{
+    unsigned transCash;
+    char MyID[20], TransID[20];
+    printf("Please enter your Bank ID:");
+    scanf("%s",MyID);
+    printf("Please enter the ID you want to trasfer to:");
+    scanf("%")
+    printf("Please enter the amount of money you want to transfer");
+    scanf("%u",&transCash);
+    tempnode->Balance
+}
+
+void Chg_Pass(tnode **head)
 {
 
 }
 
-void Make_Transaction(,)
+void Get_Cash(tnode **head)
 {
 
 }
 
-void Chg_Pass(,)
-{
-
-}
-
-void Get_Cash(,)
-{
-
-}
-
-void Deposit_account(,)
+void Deposit_account(tnode **head)
 {
 
 }
@@ -273,5 +276,31 @@ char* Gen_Pass()
 	return password;
 }
 //*****************************************************************************************************//
+char* Gen_Pass()
+{
+	    // Initialize counter
+    char i = 0;
+  
+    // Seed the random-number generator
+    // with current time so that the
+    // numbers will be different every time
+    srand((char)(time(NULL)));
+  
+    // Array of numbers
+    char numbers[] = "0123456789";
 
+    // Stores the random AccountID
+    static char AccountID[MAX_NO_Bank_AccountID_Generator];
+  
+    // To select the randomizer
+    // inside the loop
+    // randomizer = rand() % 3;
+  
+    // Iterate over the range [0, N]
+    for (i = 0; i < MAX_NO_Bank_AccountID_Generator; i++) 
+	{
+		AccountID[i] = numbers[rand() % 10];
+    }
 
+	return AccountID;
+}
