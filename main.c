@@ -106,7 +106,7 @@ void main(void)
                 }
                 else if(choice1==2)
                 {
-                    Open_existaccount();
+                    Open_existaccount(&Head);
                 
                 }
                 else if(choice ==3)
@@ -145,22 +145,22 @@ void main(void)
                 
                 if ( choice ==1) //Transaction
                 {
-                    Make_Transaction();
+                    Make_Transaction(&Head);
                     break;
                 }
                 else if (choice ==2) //change password
                 {
-                   Chg_Pass();  
+                   Chg_Pass(&Head);  
 
                 }
                 else if (choice ==3)
                 {
 
-                    Get_Cash();
+                    Get_Cash(&Head);
                 }
                 else if(choice ==4)
                 {
-                    Deposit_account();
+                    Deposit_account(&Head);
                 }
                 
                 else if( choice ==5) //Exit
@@ -190,14 +190,77 @@ void main(void)
 
 
 
-void Open_existaccount(tnode **head)
+void Open_existaccount(tNode **head)
 {
+    int y;
+	//PrintList();
+	long long AccountId;
+	
+	start:
+	printf("Please Enter your Bank Account ID: ");
+	scanf("%lld",&AccountId);
+	
+	tNode*current=Head; //point to first node 
+	
+	//check exist of ID
+	current = CheckUser(AccountId); 
+	int OpenChoice;	
+
+	if ( current != NULL ) // LIST EXIST 
+	{
+		y=1;
+			while (y){
+				if (current->BankAccountId==AccountId){
+					printf("\n****************************************************************\n");		
+					printf("Make Transacation          Press 1\n");
+					printf("Change Account Status      Press 2\n");
+					printf("Get Cash                   Press 3\n");
+					printf("Deposite in Account        Press 4\n");
+					printf("Return to main menu        Press 5\n");
+					
+					printf("Enter your choice: ");
+					scanf("%d",&OpenChoice); 
+					printf("****************************************************************\n");	
+					
+						if (OpenChoice==1){ //Make Transacation 
+							MakeTransaction( current );
+							//PrintList(); //--> To show changes
+						}
+						
+						else if (OpenChoice==2){ //Change Account Status 
+							ChangeAccountStatus( current );
+							//PrintList();
+						 }
+						
+						
+						 else if (OpenChoice==3){ //Get Cash
+							GetCash ( current );
+							//PrintList();
+						 }
+						
+						 else if (OpenChoice==4){ //Deposite in Account 	
+							Deposite ( current );
+							//PrintList();
+						 }
+						
+						 else if (OpenChoice==5){ //Return to main menu 
+							y=0;
+						 }
+					}
+					
+				else{
+				printf("Wrong ID, Make sure you have an account\n");
+				goto start;
+				}
+		   }
+		current=current->pnext;	
+	}
 
 }
 
 void Make_Transaction(tnode **head)
 {
-    unsigned transCash;
+   /* unsigned transCash;
     char MyID[20], TransID[20];
     printf("Please enter your Bank ID:");
     scanf("%s",MyID);
@@ -205,21 +268,117 @@ void Make_Transaction(tnode **head)
     scanf("%")
     printf("Please enter the amount of money you want to transfer");
     scanf("%u",&transCash);
-    tempnode->Balance
+    tempnode->Balance */
+
+    char local_pBankAccountID[MAX_NO_Bank_AccountID_Generator];
+	// Uint8_t* local_pu8AccountStatus;
+	unsigned local_MoneyAmount;
+
+	printf("\t\tHello there :)\n\n");
+	printf("There are all IDS on our system \n");
+	printf("------------------------------------------\n");
+	display_BankAccountIDS(strNode);
+	printf("------------------------------------------\n");
+	printf("please enter Bank Account ID that you want to transfer money to >> ");
+	scanf("%s", local_pBankAccountID);
+	printf("please enter amount of money >> ");
+	scanf("%u", &local_MoneyAmount);
+	Is_BankAccountIDFound(strNode, local_pBankAccountID, local_MoneyAmount);
 }
 
 void Chg_Pass(tnode **head)
 {
+    char local_pMyBankID[15];
+	char local_MyNewPassword[15];
+	tNode* local_strCurrntNode;
+
+	printf("What is your Bank ID >> ");
+	scanf("%s", local_pMyBankID);
+
+	printf("What is your new password >> ");
+	scanf("%s", local_MyNewPassword);
+	local_strCurrntNode = CurrentNode(strNode, local_pMyBankID);
+
+	strcpy(local_strCurrntNode->password, local_MyNewPassword);
 
 }
 
 void Get_Cash(tnode **head)
 {
+    unsigned local_u16CashNo;
+	char local_u8Flag = 0;
+	char local_pu8MyBankID[15];
+	tNode* local_strCurrntNode;
+
+	printf("What is your Bank ID >> ");
+	scanf("%s", local_pu8MyBankID);
+	printf("What amount of money to be withdrawn >> ");
+	scanf("%u", &local_u16CashNo);
+	
+	local_strCurrntNode = CurrentNode(strNode, local_pu8MyBankID);
+
+	if(local_strCurrntNode == NULL)
+	{
+		printf("Invalid bank ID");
+	}
+	else 
+	{
+		if(local_strCurrntNode->balance >= local_u16CashNo)
+		{
+			local_strCurrntNode->balance -=  local_u16CashNo;
+			printf("\nYou withdrawed : %u , and your Account balance : %u \n", local_u16CashNo, local_strCurrntNode->balance);
+		}
+		else if(local_strCurrntNode->balance < local_u16CashNo)
+		{
+			printf("you don't have enough money\n");
+		}
+		else 
+		{
+			/* do nothing */
+		}
+	}
 
 }
 
 void Deposit_account(tnode **head)
 {
+    unsigned local_u16DepNo;
+	char local_pu8MyBankID[15];
+	char local_u8Flag = 0;
+	tNode* local_strCurrntNode;
+
+   
+
+	printf("What is your Bank ID >> ");
+	scanf("%s", local_pu8MyBankID);
+	printf("What amount of money to be deposited >> ");
+	scanf("%u", &local_u16DepNo);
+	local_strCurrntNode = CurrentNode(strNode, local_pu8MyBankID);
+
+	if(local_strCurrntNode == NULL)
+	{
+		printf("Invalid bank ID");
+	}
+	else 
+	{
+		if(!strcmp(local_strCurrntNode->accountStatus, "active"))
+		{
+			local_strCurrntNode->balance += local_u16DepNo;
+			printf("\nYou deposited : %u , and your Account balance : %u \n", local_u16DepNo, local_strCurrntNode->balance);
+		}
+		else if(!strcmp(local_strCurrntNode->accountStatus, "restricted"))
+		{
+			printf("this account is restricted");
+		}
+		else if(!strcmp(local_strCurrntNode->accountStatus, "closed"))
+		{
+			printf("this account is closed");
+		}
+		else 
+		{
+			/*  */
+		}
+	}
 
 }
 //************************************************************************************//
@@ -304,3 +463,40 @@ char* Gen_Pass()
 
 	return AccountID;
 }
+
+
+tNode* CheckUser( long long ID ){
+	
+	tNode *current=Head;
+	
+	while( current->pnext!= NULL ){ 
+	
+		if (current->BankAccountId==ID){
+			return current;
+	    }
+	
+		current=current->pnext;
+	}
+	//return node of sending ID
+	return current;
+}
+//**********************************************************************************************************************************************
+//Function Print List
+void PrintList(){
+	tNode *current = Head;
+	while (current!=NULL){
+		//printf("Address in memory= %X\n",current);
+		printf("User Name: %s\n",current->Name);
+		printf("National ID: %d\n",current->National_ID);
+		printf("Password: %s\n",current->Password);
+		printf("AccountID: %lld\n",current->BankAccountId);
+		printf("Age: %d\n",current->Age);
+		printf("Address: %s\n",current->Address);
+		printf("Balance: %lld\n",current->Balance);
+		printf("AccountStatus: %s\n",current->AccountStatus); 
+		current=current->pnext;
+	}	
+} 
+
+//******************************************************************************************************************************************************
+

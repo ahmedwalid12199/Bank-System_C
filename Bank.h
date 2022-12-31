@@ -1,9 +1,11 @@
 
-void Open_existaccount(,);
-void Make_Transaction(,);
-void Chg_Pass(,);
-void Get_Cash(,);
-void Deposit_account(,);
+void Open_existaccount(tNode **Head);
+void Make_Transaction(tNode **Head);
+void Chg_Pass(tNode **Head);
+void Get_Cash(tNode **Head);
+void Deposit_account(tNode **head);
+void PrintList();
+tNode* CheckUser( long long ID );
 
 typedef struct NODE {
     char Name[60];
